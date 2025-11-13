@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Task Management App Color Palette */
+:root {
+  --primary: #4A90E2;
+  --primary-light: #B3D9F2;
+  --primary-dark: #2E5C8A;
+  --accent: #4A90E2;
+
+  --bg-white: #FFFFFF;
+  --bg-light: #F8FAFB;
+  --bg-gradient: #B3D9F2;
+
+  --text-dark: #1A1A1A;
+  --text-primary: #2D3748;
+  --text-muted: #6B7280;
+  --text-light: #9CA3AF;
+
+  --border-light: #E5E7EB;
+  --border-lighter: #F3F4F6;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--bg-white);
+  --color-background-soft: var(--bg-light);
+  --color-background-mute: var(--bg-gradient);
+
+  --color-border: var(--border-light);
+  --color-border-hover: var(--border-lighter);
+
+  --color-heading: var(--text-dark);
+  --color-text: var(--text-primary);
+
+  --section-gap: 160px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--vt-c-black);
+    --color-background-soft: var(--vt-c-black-soft);
+    --color-background-mute: var(--vt-c-black-mute);
+
+    --color-border: var(--vt-c-divider-dark-2);
+    --color-border-hover: var(--vt-c-divider-dark-1);
+
+    --color-heading: var(--vt-c-text-dark-1);
+    --color-text: var(--vt-c-text-dark-2);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
