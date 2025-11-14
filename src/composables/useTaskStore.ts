@@ -1,61 +1,45 @@
 // useTaskStore.ts
-import { ref, computed } from 'vue'
+import { computed, type Ref } from 'vue' 
+import { 
+  addDoc, 
+  deleteDoc, 
+  updateDoc, 
+  doc, 
+  query, 
+  orderBy 
+} from 'firebase/firestore'
+import { useCollection } from 'vuefire' 
+import { db, tasksCollectionRef, type Task } from '../firebase' 
+ 
+const tasksQuery = query(tasksCollectionRef, orderBy('createdAt', 'desc'))
+ 
+const tasks: Ref<Task[]> = useCollection(tasksQuery) 
 
-export interface Task {
-  id: string
-  title: string
-  description: string
-  category: string
-  date: string
-  startTime: string
-  endTime: string
-  createdAt: Date
-}
-
-// Assuming this array is now automatically synced by your backend library (e.g., VueFire)
-const tasks = ref<Task[]>([])
 
 export const useTaskStore = () => {
-  // 💡 SIMULATION: This function mimics a network request delay
-  const asyncDelay = () => new Promise<void>(resolve => setTimeout(resolve, 10))
-
-  // 💥 FIX: Make CRUD operations async and add 'await' for the simulated delay
-  const addTask = async (task: Omit<Task, 'id' | 'createdAt'>): Promise<Task> => {
-    await asyncDelay()
-    const newTask: Task = {
+   
+  const addTask = async (task: Omit<Task, 'id' | 'createdAt'>): Promise<void> => { 
+    const newTaskData = {
       ...task,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-    }
-    tasks.value.unshift(newTask)
-    return newTask
+      createdAt: new Date(), 
+    } as Omit<Task, 'id'>  
+    await addDoc(tasksCollectionRef, newTaskData)
   }
 
-  const deleteTask = async (id: string): Promise<void> => {
-    await asyncDelay()
-    const index = tasks.value.findIndex((task) => task.id === id)
-    if (index > -1) {
-      tasks.value.splice(index, 1)
-    }
+  const deleteTask = async (id: string): Promise<void> => { 
+    await deleteDoc(doc(db, 'tasks', id))
   }
 
-  const updateTask = async (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Promise<void> => {
-    await asyncDelay()
-    const task = tasks.value.find((t) => t.id === id)
-    if (task) {
-      Object.assign(task, updates)
-    }
+  const updateTask = async (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Promise<void> => { 
+    await updateDoc(doc(db, 'tasks', id), updates)
   }
 
-  // getTask remains synchronous as it reads from the locally synced reactive array
   const getTask = (id: string) => {
-    return tasks.value.find((t) => t.id === id)
+    return computed(() => tasks.value.find((t) => t.id === id))
   }
-
-  const getAllTasks = computed(() => tasks.value)
 
   return {
-    tasks: getAllTasks,
+    tasks: computed(() => tasks.value), 
     addTask,
     deleteTask,
     updateTask,
